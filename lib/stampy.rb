@@ -29,6 +29,10 @@ module Stampy
       end
     end
 
+    def self.count
+      table.count
+    end
+
     def self.table_name
       self.name.downcase
     end
@@ -42,6 +46,10 @@ module Stampy
 
     def self.database
       Stampy.database
+    end
+
+    def self.table
+      database[table_name.to_sym]
     end
 
     def self.attribute(*attrs)

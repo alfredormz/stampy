@@ -62,6 +62,10 @@ describe Stampy do
       assert_equal "Martin", martin.name
       assert_equal "Arroz con Pollo", martin.speciality
     end
+
+    it "counts the collection" do
+      assert_equal 0, Chef.count
+    end
   end
 end
 

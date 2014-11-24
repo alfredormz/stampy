@@ -6,6 +6,7 @@ module Stampy
 
   def self.connect(url=nil)
     @url      = url || ENV['DATABASE_URL']
+
     @database = Sequel.connect(@url).tap do |db|
       db.execute "CREATE EXTENSION IF NOT EXISTS HSTORE"
     end
@@ -34,6 +35,16 @@ module Stampy
 
     def self.database
       Stampy.database
+    end
+
+    def self.attribute(*attrs)
+      attrs.each do |attr|
+        define_method attr do
+        end
+
+        define_method :"#{attr}=" do |value|
+        end
+      end
     end
   end
 end

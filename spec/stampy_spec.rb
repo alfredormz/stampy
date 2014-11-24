@@ -9,6 +9,7 @@ rescue
 end
 
 class Chef < Stampy::Model
+  attribute :name, :speciality
 end
 
 describe Stampy do
@@ -37,16 +38,23 @@ describe Stampy do
 
   describe Stampy::Model do
 
-    it "should create accessors for each attribute" do
-      Chef.attribute :name, :speciality
-      carl = Chef.new
+    let(:carl) { Chef.new }
 
+    it "should create accessors for each attribute" do
       %i{name speciality}.each do |method|
         assert carl.respond_to?(method), "carl.#{method} should exist"
  
         writer_method = :"#{method}="
         assert carl.respond_to?(writer_method), "carl.#{writer_method} does not exist"
       end
+    end
+
+    it "should store the values" do
+       carl.name = "Carl Casper"
+       assert_equal "Carl Casper", carl.name
+
+       carl.speciality = "Sandwich Cubano"
+       assert_equal "Sandwich Cubano", carl.speciality
     end
   end
 end

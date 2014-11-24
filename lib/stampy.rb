@@ -22,6 +22,10 @@ module Stampy
 
   class Model
 
+    def initialize
+      @attributes = {}
+    end
+
     def self.table_name
       self.name.downcase
     end
@@ -40,9 +44,11 @@ module Stampy
     def self.attribute(*attrs)
       attrs.each do |attr|
         define_method attr do
+          @attributes[attr]
         end
 
         define_method :"#{attr}=" do |value|
+          @attributes[attr] = value
         end
       end
     end

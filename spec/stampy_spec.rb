@@ -4,7 +4,7 @@ require "stampy"
 Stampy.connect
 
 begin
-  Stampy.database.execute("DROP TABLE chef")
+  Stampy.execute("DROP TABLE chef")
 rescue
 end
 
@@ -30,6 +30,6 @@ WHERE  n.nspname = 'public'
 AND    c.relname = 'chef'
 AND    c.relkind = 'r'
     }
-    assert_equal 1, Stampy.database.execute(query)
+    assert_equal 1, Stampy.execute(query)
   end
 end

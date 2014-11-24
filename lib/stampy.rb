@@ -13,6 +13,10 @@ module Stampy
     @database
   end
 
+  def self.execute(query)
+    database.execute query
+  end
+
   class Model
 
     def self.table_name

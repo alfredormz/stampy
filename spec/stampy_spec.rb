@@ -40,31 +40,63 @@ describe Stampy do
 
     let(:carl) { Chef.new }
 
-    it "should create accessors for each attribute" do
-      %i{name speciality}.each do |method|
-        assert carl.respond_to?(method), "carl.#{method} should exist"
- 
-        writer_method = :"#{method}="
-        assert carl.respond_to?(writer_method), "carl.#{writer_method} does not exist"
+    describe "Basics" do
+
+      it "should create accessors for each attribute" do
+        %i{name speciality}.each do |method|
+          assert carl.respond_to?(method), "carl.#{method} should exist"
+   
+          writer_method = :"#{method}="
+          assert carl.respond_to?(writer_method), "carl.#{writer_method} does not exist"
+        end
+      end
+
+      it "should store the values" do
+         carl.name = "Carl Casper"
+         assert_equal "Carl Casper", carl.name
+
+         carl.speciality = "Sandwich Cubano"
+         assert_equal "Sandwich Cubano", carl.speciality
+      end
+
+      it "initializes with a hash" do
+        martin = Chef.new name: "Martin", speciality: "Arroz con Pollo"
+        assert_equal "Martin", martin.name
+        assert_equal "Arroz con Pollo", martin.speciality
+      end
+
+      it "counts the collection" do
+        assert_equal 0, Chef.count
       end
     end
 
-    it "should store the values" do
-       carl.name = "Carl Casper"
-       assert_equal "Carl Casper", carl.name
+    describe "Persistence" do
 
-       carl.speciality = "Sandwich Cubano"
-       assert_equal "Sandwich Cubano", carl.speciality
-    end
+      before do
+        Chef.delete_all
+      end
 
-    it "initializes with a hash" do
-      martin = Chef.new name: "Martin", speciality: "Arroz con Pollo"
-      assert_equal "Martin", martin.name
-      assert_equal "Arroz con Pollo", martin.speciality
-    end
+      it "should save a new model" do
+        chef = Chef.new name: "Alfredo", speciality: "Asado"
 
-    it "counts the collection" do
-      assert_equal 0, Chef.count
+        assert chef.new?
+        assert chef.save
+        assert_equal 1, Chef.count
+        refute chef.new?
+      end
+
+      it "creates a new model with a hash" do
+        chef = Chef.create name: "Mariana", speciality: "Pastas"
+        assert_equal "Mariana", chef.name
+        assert_equal "Pastas", chef.speciality
+      end
+
+      it "modifies attributes" do
+        chef = Chef.create name: "Juan"
+        chef.name = "Roberto"
+        chef.save
+        assert_equal "Roberto", chef.name
+      end
     end
   end
 end

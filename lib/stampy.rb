@@ -24,6 +24,34 @@ module Stampy
 
     def initialize(attrs={})
       @attributes = {}
+      update_attributes attrs
+    end
+
+    def new?
+      @id.nil?
+    end
+
+    def save
+      hstore_data = Sequel.hstore @attributes
+      if new?
+        @id = table.insert(data: hstore_data)
+      else
+        table.update(data: hstore_data)
+      end
+    end
+
+    def self.create(attrs={})
+      new_instance = self.new(attrs)
+      new_instance.save
+      new_instance
+    end
+
+    def table
+      self.class.table
+    end
+
+    def update_attributes(attrs={})
+      @id = attrs.delete(:id)
       attrs.each do |key, value|
         public_send "#{key}=", value
       end
@@ -50,6 +78,14 @@ module Stampy
 
     def self.table
       database[table_name.to_sym]
+    end
+
+    def self.truncate
+      table.truncate
+    end
+
+    def self.delete_all
+      table.delete
     end
 
     def self.attribute(*attrs)

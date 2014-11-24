@@ -25,12 +25,12 @@ describe Stampy do
 
     it "should create the table if does not exist" do
       query = %q{
-  SELECT 1
-  FROM   pg_catalog.pg_class c
-  JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-  WHERE  n.nspname = 'public'
-  AND    c.relname = 'chef'
-  AND    c.relkind = 'r'
+        SELECT 1
+        FROM   pg_catalog.pg_class c
+        JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+        WHERE  n.nspname = 'public'
+        AND    c.relname = 'chef'
+        AND    c.relkind = 'r'
       }
       assert_equal 1, Stampy.execute(query)
     end
@@ -45,7 +45,7 @@ describe Stampy do
       it "should create accessors for each attribute" do
         %i{name speciality}.each do |method|
           assert carl.respond_to?(method), "carl.#{method} should exist"
-   
+
           writer_method = :"#{method}="
           assert carl.respond_to?(writer_method), "carl.#{writer_method} does not exist"
         end
@@ -107,6 +107,13 @@ describe Stampy do
         assert_nil Chef[100]
       end
 
+      it "destroys a record" do
+        chef = Chef.create
+        assert chef.id
+
+        chef.destroy
+        assert_nil Chef[chef.id]
+      end
     end
   end
 end

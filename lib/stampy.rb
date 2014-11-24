@@ -53,12 +53,6 @@ module Stampy
       )
     end
 
-    def self.create(attrs={})
-      instance = new(attrs)
-      instance.save
-      instance
-    end
-
     def table
       self.class.table
     end
@@ -70,10 +64,6 @@ module Stampy
       end
     end
 
-    def self.[](id)
-      new(id: id).load!
-    end
-
     def load!
       record = table[id: @id]
       return if record.nil?
@@ -82,6 +72,20 @@ module Stampy
       @attributes = record[:data]
 
       self
+    end
+
+    def destroy
+      table.where(id: @id).delete
+    end
+
+    def self.create(attrs={})
+      instance = new(attrs)
+      instance.save
+      instance
+    end
+
+    def self.[](id)
+      new(id: id).load!
     end
 
     def self.count

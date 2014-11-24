@@ -22,8 +22,11 @@ module Stampy
 
   class Model
 
-    def initialize
+    def initialize(attrs={})
       @attributes = {}
+      attrs.each do |key, value|
+        public_send "#{key}=", value
+      end
     end
 
     def self.table_name

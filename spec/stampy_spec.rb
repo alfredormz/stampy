@@ -56,6 +56,12 @@ describe Stampy do
        carl.speciality = "Sandwich Cubano"
        assert_equal "Sandwich Cubano", carl.speciality
     end
+
+    it "initializes with a hash" do
+      martin = Chef.new name: "Martin", speciality: "Arroz con Pollo"
+      assert_equal "Martin", martin.name
+      assert_equal "Arroz con Pollo", martin.speciality
+    end
   end
 end
 

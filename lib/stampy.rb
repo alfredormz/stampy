@@ -22,6 +22,8 @@ module Stampy
 
   class Model
 
+    attr_reader :id
+
     def initialize(attrs={})
       @attributes = {}
       update_attributes attrs
@@ -32,18 +34,29 @@ module Stampy
     end
 
     def save
-      hstore_data = Sequel.hstore @attributes
       if new?
-        @id = table.insert(data: hstore_data)
+        create @attributes
       else
-        table.update(data: hstore_data)
+        update
       end
     end
 
+    def create(attrs={})
+      @id = table.insert(
+        data: Sequel.hstore(@attributes)
+      )
+    end
+
+    def update
+      table[id: @id].update(
+        data: Sequel.hstore(@attributes)
+      )
+    end
+
     def self.create(attrs={})
-      new_instance = self.new(attrs)
-      new_instance.save
-      new_instance
+      instance = new(attrs)
+      instance.save
+      instance
     end
 
     def table
@@ -55,6 +68,20 @@ module Stampy
       attrs.each do |key, value|
         public_send "#{key}=", value
       end
+    end
+
+    def self.[](id)
+      new(id: id).load!
+    end
+
+    def load!
+      record = table[id: @id]
+      return if record.nil?
+
+      @id         = record[:id]
+      @attributes = record[:data]
+
+      self
     end
 
     def self.count

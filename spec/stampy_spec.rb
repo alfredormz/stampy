@@ -97,6 +97,16 @@ describe Stampy do
         chef.save
         assert_equal "Roberto", chef.name
       end
+
+      it "finds by id" do
+        chef = Chef.create name: "Homer"
+        assert_equal "Homer", Chef[chef.id].name
+      end
+
+      it "should return nil if the record is not found" do
+        assert_nil Chef[100]
+      end
+
     end
   end
 end

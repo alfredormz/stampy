@@ -14,5 +14,20 @@ module Stampy
   end
 
   class Model
+
+    def self.table_name
+      self.name.downcase
+    end
+
+    def self.inherited(model)
+      self.database.create_table? model.table_name do
+        primary_key :id
+        hstore      :data
+      end
+    end
+
+    def self.database
+      Stampy.database
+    end
   end
 end

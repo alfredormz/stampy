@@ -115,6 +115,26 @@ describe Stampy do
         assert_nil Chef[chef.id]
       end
     end
+
+    describe "Finding records" do
+
+      before do
+        Chef.delete_all
+        Chef.create name: "Law", speciality: "Milafritas"
+        Chef.create name: "Alfredo", speciality: "Milafritas"
+      end
+
+      it "finds records by key" do
+        chefs = Chef.find(name: "Law")
+        assert_equal 1, chefs.count
+        assert_equal "Law", chefs.first.name
+      end
+
+      it "finds records by multiple keys" do
+        mila_chefs = Chef.find(speciality: "Milafritas")
+        assert_equal 2, mila_chefs.count
+      end
+    end
   end
 end
 

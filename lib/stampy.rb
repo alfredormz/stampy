@@ -78,6 +78,18 @@ module Stampy
       table.where(id: @id).delete
     end
 
+    def self.find(conditions={})
+      query = []
+      if conditions.any?
+        conditions.each do |key, value|
+          query << "data @> '\"#{key}\" => \"#{value}\"'"
+        end
+      end
+      table.where(query.join(" AND ")).all.map do |row|
+        new(id: row[:id]).load!
+      end
+    end
+
     def self.create(attrs={})
       instance = new(attrs)
       instance.save
